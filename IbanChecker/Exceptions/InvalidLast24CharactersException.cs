@@ -1,4 +1,6 @@
-﻿namespace IbanChecker.Exceptions
+﻿using System;
+
+namespace IbanChecker.Exceptions
 {
     public class InvalidLast24CharactersException : Exception
     {

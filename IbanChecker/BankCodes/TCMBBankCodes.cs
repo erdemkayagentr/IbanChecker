@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 namespace IbanChecker.BankCodes
 {
     [XmlRoot(ElementName = "banka", Namespace = "http://bs.tcmb.gov.tr/bankaSubeTumListe/")]

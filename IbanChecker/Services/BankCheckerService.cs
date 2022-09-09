@@ -2,6 +2,9 @@
 using IbanChecker.Consts;
 using IbanChecker.Exceptions;
 using IbanChecker.Models.Enums;
+using System;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Xml.Serialization;
@@ -11,10 +14,11 @@ namespace IbanChecker.Services
     {
         private const int MOD_97_10 = 97;
         public const string ZERO = "0";
+        public const int MOD_CONTROL_NUMBER = 98;
         public string GetBankByIban(string iban)
         {
             string result = string.Empty;
-            
+
 
             var bankCode = iban.Substring(5, 4);
 
@@ -32,7 +36,7 @@ namespace IbanChecker.Services
 
         }
 
-       
+
 
         public bool IsAkbankByBankCode(string bankCode)
         {
@@ -106,14 +110,12 @@ namespace IbanChecker.Services
         {
             string ibanResult = string.Empty;
 
-            var bankCode = BankCodesConts.AKBANK_CODES;
-
             var lenghtDep = depertmantcode.Length;
             if (lenghtDep < 5)
             {
                 for (int i = 0; i < 5 - lenghtDep; i++)
                 {
-                    depertmantcode = "0" + depertmantcode;
+                    depertmantcode = ZERO + depertmantcode;
                 }
             }
 
@@ -122,7 +124,7 @@ namespace IbanChecker.Services
             {
                 for (int i = 0; i < 9-lengthAccount; i++)
                 {
-                    accountCode = "0"+accountCode;
+                    accountCode = ZERO + accountCode;
                 }
             }
 
@@ -139,13 +141,13 @@ namespace IbanChecker.Services
         {
             decimal controlNumber = decimal.Zero;
             var controlDigits = BankCodesConts.AKBANK_CODES +departmentCode+BankCodesConts.AKBANK_TL_ACCOUNT_CODE+ accountCode+ ((int)Helpers.ToEnum<ConversionEnum>("T")).ToString()
-                +((int)Helpers.ToEnum<ConversionEnum>("R")).ToString()+"00";
+                +((int)Helpers.ToEnum<ConversionEnum>("R")).ToString()+ZERO+ZERO;
 
             var isDecimal = Decimal.TryParse(controlDigits, out controlNumber);
 
             if (!isDecimal) throw new Exception("Error");
 
-            var control = 98 - (controlNumber % 97);
+            var control = MOD_CONTROL_NUMBER - (controlNumber % MOD_97_10);
 
             return control.ToString();
         }
@@ -166,13 +168,16 @@ namespace IbanChecker.Services
 
             XmlSerializer ser = new XmlSerializer(typeof(BankaSubeTumListe));
 
-            WebClient client = new WebClient();
+            using (WebClient client = new WebClient())
+            {
+                string data = Encoding.Default.GetString(client.DownloadData(url));
 
-            string data = Encoding.Default.GetString(client.DownloadData(url));
+                Stream stream = new MemoryStream(Encoding.UTF8.GetBytes(data));
 
-            Stream stream = new MemoryStream(Encoding.UTF8.GetBytes(data));
+                listBank = (BankaSubeTumListe)ser.Deserialize(stream);
+            }
 
-            listBank = (BankaSubeTumListe)ser.Deserialize(stream);
+
             string result = string.Empty;
             var bank = listBank.BankaSubeleri.Where(x => x.Banka.BKd.Equals(bankCode)).FirstOrDefault();
             if (bank!=null)

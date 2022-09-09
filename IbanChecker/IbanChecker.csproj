@@ -1,13 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <Compile Remove="FakesAssemblies\**" />
+    <EmbeddedResource Remove="FakesAssemblies\**" />
+    <None Remove="FakesAssemblies\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.QualityTools.Testing.Fakes" Version="16.11.230815" />
+    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
+  </ItemGroup>
+
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>netstandard2.0;net471;net60</TargetFrameworks>
+    <PackageId>Zeni.IbanChecker</PackageId>
+    <Title>Zeni.IbanChecker</Title>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Erdem KAYA</Authors>
+    <Company>erdemkaya.gen.tr</Company>
+    <PackageProjectUrl>https://github.com/erdemkayagentr/IbanChecker</PackageProjectUrl>
+    <Description>A simple package by @erdemkayagentr</Description>
+    <Summary>Bank Iban Checker</Summary>
+    <RepositoryUrl>https://github.com/erdemkayagentr/IbanChecker</RepositoryUrl>
+    <PackageTags>iban checker erdemkayagentr</PackageTags>
+    <PackageReleaseNotes>
+      Add Akbank Iban Generator
+    </PackageReleaseNotes>
+    <Version>1.0.0</Version>
+    <AssemblyName>Zeni.IbanChecker</AssemblyName>
+    <PackageIcon>zeni.png</PackageIcon>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
+    <AdditionalDesignTimeBuildInput Remove="FakesAssemblies\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="zeni.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
