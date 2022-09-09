@@ -1,6 +1,6 @@
-﻿namespace IbanChecker
+﻿namespace IbanChecker.Models.Enums
 {
-    public enum Conversion
+    public enum ConversionEnum
     {
         A = 10,
         B = 11,
@@ -30,5 +30,5 @@
         Z = 35
     }
 
-    
+
 }
