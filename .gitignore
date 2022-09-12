@@ -364,3 +364,4 @@ FodyWeavers.xsd
 *.nuget.targets
 *.nuget.config
 /nuget.config
+/IbanChecker/.sonarqube/conf
