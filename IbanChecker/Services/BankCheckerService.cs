@@ -1,6 +1,7 @@
 ﻿using IbanChecker.BankCodes;
 using IbanChecker.Consts;
 using IbanChecker.Exceptions;
+using IbanChecker.Models;
 using IbanChecker.Models.Enums;
 using System;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Xml.Serialization;
+
 namespace IbanChecker.Services
 {
     public class BankCheckerService : IBankCheckerService
@@ -21,8 +23,6 @@ namespace IbanChecker.Services
 
 
             var bankCode = iban.Substring(5, 4);
-
-
 
             return GetBankName(bankCode);
         }
@@ -133,36 +133,57 @@ namespace IbanChecker.Services
             if (isValid)
                 return ibanResult;
             else
-                throw new InvalidIbanException();
+                throw new InvalidGeneratedIbanException();
 
         }
 
+        public AkbankTLAccountResponse AkbankIbanToAccountCodes(string iban)
+        {
+            var isCorrectIban = CheckIban(iban);
+            if (!isCorrectIban) throw new InvalidIbanException();
+            
+            var isAkbank = IsAkbankByBankIban(iban);
+            if (!isAkbank) throw new InvalidIbanException();
+
+            var branchCode = iban.Substring(10, 4);
+            var accountCode = iban.Substring(17, 11);
+
+            return new AkbankTLAccountResponse
+            {
+                AccountCode = accountCode,
+                BranchCode = branchCode
+            };
+
+        }
+
+
+        #region Private
         private string GetControlCode(string departmentCode, string accountCode)
         {
             decimal controlNumber = decimal.Zero;
             var controlDigits = BankCodesConts.AKBANK_CODES +departmentCode+BankCodesConts.AKBANK_TL_ACCOUNT_CODE+ accountCode+ ((int)Helpers.ToEnum<ConversionEnum>("T")).ToString()
-                +((int)Helpers.ToEnum<ConversionEnum>("R")).ToString()+ZERO+ZERO;
+                                +((int)Helpers.ToEnum<ConversionEnum>("R")).ToString()+ZERO+ZERO;
 
             var isDecimal = Decimal.TryParse(controlDigits, out controlNumber);
 
-            if (!isDecimal) throw new Exception("Error");
+            if (!isDecimal) throw new InvalidIbanException();
 
             var control = MOD_CONTROL_NUMBER - (controlNumber % MOD_97_10);
 
             return control.ToString();
         }
+
+
+
+
         private string GetBankName(string bankCode)
         {
 
             XmlSerializer serializer =
        new XmlSerializer(typeof(BankaSubeTumListe));
 
-            //     // Declare an object variable of the type to be deserialized.
-            //    // var directory = Directory.GetCurrentDirectory() //Path.Combine(Directory.get(), "bankaSubeTumListe.xml");
-            //     string assemblyFolder = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
-            //     string directory = Path.Combine(assemblyFolder, "DataXml\\bankaSubeTumListe.xml");
+       
             BankaSubeTumListe listBank;
-            //https://eftemkt.tcmb.gov.tr/bankasubelistesi/bankaSubeTumListe.xml
 
             string url = "https://eftemkt.tcmb.gov.tr/bankasubelistesi/bankaSubeTumListe.xml";
 
@@ -200,5 +221,7 @@ namespace IbanChecker.Services
             }
 
         }
+
+        #endregion
     }
 }

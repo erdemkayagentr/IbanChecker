@@ -1,4 +1,6 @@
-﻿namespace IbanChecker.Services
+﻿using IbanChecker.Models;
+
+namespace IbanChecker.Services
 {
     public interface IBankCheckerService
     {
@@ -46,5 +48,12 @@
         /// </param>
         /// <returns></returns>
         string AkbankIbanGenerate(string branchCode, string accountCode);
+        /// <summary>
+        /// This method will be translate iban to account code with branch code
+        /// Nonetheless now only work TL Accounts
+        /// </summary>
+        /// <param name="iban"></param>
+        /// <returns></returns>
+        AkbankTLAccountResponse AkbankIbanToAccountCodes(string iban);
     }
 }
