@@ -128,7 +128,7 @@ namespace IbanChecker.Services
                 }
             }
 
-            ibanResult =  "TR"+GetControlCode(depertmantcode, accountCode)+BankCodesConts.AKBANK_CODES + depertmantcode+BankCodesConts.AKBANK_TL_ACCOUNT_CODE+ accountCode;
+            ibanResult =  "TR"+GetControlCode(depertmantcode, accountCode)+ZERO+BankCodesConts.AKBANK_CODES + depertmantcode+BankCodesConts.AKBANK_TL_ACCOUNT_CODE+ accountCode;
             var isValid = CheckIban(ibanResult);
             if (isValid)
                 return ibanResult;
