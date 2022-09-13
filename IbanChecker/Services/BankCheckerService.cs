@@ -146,7 +146,7 @@ namespace IbanChecker.Services
             if (!isAkbank) throw new InvalidIbanException();
 
             var branchCode = iban.Substring(10, 4);
-            var accountCode = iban.Substring(17, 11);
+            var accountCode = iban.Substring(17, 9);
 
             return new AkbankTLAccountResponse
             {

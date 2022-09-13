@@ -27,7 +27,7 @@
     <PackageReleaseNotes>
       Add Akbank Iban Generator
     </PackageReleaseNotes>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <AssemblyName>Zeni.IbanChecker</AssemblyName>
     <PackageIcon>zeni.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

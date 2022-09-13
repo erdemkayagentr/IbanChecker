@@ -12,5 +12,5 @@ iban = Console.ReadLine();
 IBankCheckerService service = new BankCheckerService();
 //service.GetBankByIban(iban);
 //var iban = IbanChecker.IbanChecker.AkbankIbanGenerate(depertmant,account);
-Console.WriteLine(service.GetBankByBankCode(iban));
+Console.WriteLine(service.AkbankIbanToAccountCodes("TR760004600646888000170851"));
 Console.ReadLine();
